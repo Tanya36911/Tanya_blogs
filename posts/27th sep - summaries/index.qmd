@@ -1,0 +1,108 @@
+---
+title: "27th september: Summarising Data"
+author: "Tanya"
+---
+
+#### Introduction
+
+Today we are learning to summarize data so we can get relevant data that is significant to us.
+
+```{r}
+#| label: setup
+library(tidyverse)
+library(mosaic)
+library(skimr)
+library(knitr)
+library(kableExtra)
+library(babynames)
+
+
+
+```
+
+Here we are taking a data set called mpg and and viewing the first 10 columns:
+
+```{r}
+mpg %>% 
+  head(10)
+
+
+
+```
+
+-   qualitative data:
+
+    -   manufacture
+
+    -   model
+
+    -   displacement
+
+    -   year
+
+    -   cyl
+
+    -   trans
+
+    -   drv
+
+-   quantitative data:
+
+    -   city millage
+
+    -   high way millage
+
+    #### Ways of Summarizing Data
+
+```{r}
+mpg %>% skimr::skim()
+
+```
+
+```{r}
+glimpse(mpg)
+
+```
+
+```{r}
+inspect(mpg)
+
+
+```
+
+Since, the computer R studio doesn't recognize that certain variables are Ordinal. Here is a code that converts the data to Ordinal (factor).
+
+> you can see that *\<int\>* has changed to *\<fct\>*
+
+```{r}
+mpg_modified <- mpg %>%
+  dplyr::mutate(
+    cyl = as_factor(cyl),
+    fl = as_factor(fl),
+    drv = as_factor(drv),
+    class = as_factor(class),
+    trans = as_factor(trans)
+  )
+glimpse(mpg_modified)
+```
+
+#### Playing Around!!
+
+I imported the library baby names and will try summarizing it.
+
+```{r}
+glimpse(babynames)
+```
+
+Now I will take **sex** and **factor** it because its an Ordinal data that has two levels.
+
+> You can see that *\<char\>* has changed to *\<fct\>*
+
+```{r}
+babynames_modified <- babynames %>% 
+  dplyr::mutate(
+    sex= as.factor(sex)
+  )
+glimpse(babynames_modified)
+
+```

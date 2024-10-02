@@ -1,0 +1,33 @@
+---
+title: "My name is Tanya Michelle Justin"
+author: "Tanya"
+---
+
+## Introduction
+
+This is a ridiculous thing I'm writing in Arvinds class.
+
+### My First Piece Of R Code
+
+```{r}
+#| label: setup
+library(tidyverse)
+library(ggformula)
+library(babynames)
+
+```
+
+```{r}
+babynames
+```
+
+```{r}
+babynames %>% filter(name=="Tanya")
+```
+
+```{r}
+babynames %>% filter(name=="Tanya") %>% 
+  gf_line(n~year)
+```
+
+lol what a common name.
