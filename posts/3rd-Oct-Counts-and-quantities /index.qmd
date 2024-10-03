@@ -1,0 +1,197 @@
+---
+title: "Counts and Quantities"
+author: "Tanya"
+---
+
+```{r}
+#| label: setup
+library(tidyverse)
+library(mosaic)
+library(ggformula) 
+library(skimr)
+```
+
+```{r}
+taxi <- read_csv("https://vincentarelbundock.github.io/Rdatasets/csv/modeldata/taxi.csv")
+taxi
+```
+
+```{r}
+glimpse(taxi)
+```
+
+```{r}
+skim(taxi)
+```
+
+```{r}
+inspect(taxi)
+
+```
+
+```{r}
+taxi_modified <- taxi %>% 
+  mutate(
+    dow=factor(dow,
+      levels=c("Mon","Tue","Wed","Thu","Fri","Sat","Sun"),
+      labels=c("Mon","Tue","Wed","Thu","Fri","Sat","Sun"),
+      ordered= TRUE
+    ),
+     local = factor(local,
+      levels = c("no", "yes"),
+      labels = c("no", "yes"),
+      ordered = TRUE
+    ),
+     month = factor(month,
+      levels = c("Jan", "Feb", "Mar", "Apr"),
+      labels = c("Jan", "Feb", "Mar", "Apr"),
+      ordered = TRUE
+    ),
+    tip = factor(tip,
+      levels=c("no", "yes"),
+      labels=c("no", "yes"),
+      ordered=TRUE
+     ),
+    hour=as.factor(hour),
+    company=as.factor(company)
+    
+  )
+taxi_modified %>% glimpse()
+                
+    
+    
+
+
+```
+
+```{r}
+## Set graph theme
+##theme_set(new = theme_custom())
+##
+
+gf_bar(~tip, data = taxi_modified) %>%
+  gf_bar(~tip,fill =  ~local) %>% 
+  gf_refine(scale_fill_manual(values = c("orange", "powderblue")))
+  gf_labs(title = "Plot 1A: Counts of Tips") 
+ 
+```
+
+```{r}
+taxi_modified %>%
+ 
+  gf_bar(~local,
+    fill = ~tip,
+    position = "dodge"
+  ) %>%
+  gf_refine(scale_fill_manual(values = c("orange", "powderblue"))) %>% 
+  gf_labs(title = "Plot 2A: Dodged Bar Chart")
+```
+
+```{r}
+taxi_modified %>%
+ 
+  gf_bar(~local,
+    fill = ~tip,
+    position = "stack"
+  ) %>%
+  gf_refine(scale_fill_manual(values = c("orange", "powderblue"))) %>% 
+  gf_labs(title = "Plot 2A: Dodged Bar Chart")
+```
+
+```{r}
+taxi_modified %>%
+ 
+  gf_bar(~local,
+    fill = ~tip,
+    position = "fill"
+  ) %>%
+  gf_refine(scale_fill_manual(values = c("orange", "powderblue"))) %>% 
+  gf_labs(title = "Plot 2A: Dodged Bar Chart")
+```
+
+```{r}
+
+## Showing "per capita" percentages
+## Better labelling of Y-axis
+taxi_modified %>%
+  gf_bar(~company, fill = ~tip, position = "fill") %>%
+  gf_labs(
+    title = "Plot 2D: Filled Bar Chart",
+    subtitle = "Shows Per group differences in Proportions!"
+  ) %>%
+  gf_refine(scale_fill_manual(values = c("orange", "powderblue"))) %>% 
+  gf_theme(theme(axis.text.x = element_text(size = 6, angle = 45, hjust = 1)))
+```
+
+### **Question-4: Does a `tip` depend upon the `distance`, `hour` of day, and `dow`and `month`?**
+
+```{r}
+gf_bar(~hour, fill = ~tip, data = taxi_modified, position = "fill") %>%
+  gf_labs(title = "Plot B: Counts of Tips by Hour") %>% 
+   gf_refine(scale_fill_manual(values = c("orange", "powderblue")))
+  
+```
+
+```{r}
+##
+gf_bar(~dow, fill = ~tip, data = taxi_modified,position="fill") %>%
+  gf_labs(title = "Plot C: Counts of Tips by Day of Week") %>% 
+     gf_refine(scale_fill_manual(values = c("orange", "powderblue")))
+```
+
+```{r}
+##
+gf_bar(~month, fill = ~tip, data = taxi_modified) %>%
+  gf_labs(title = "Plot D: Counts of Tips by Month") %>% 
+  gf_refine(scale_fill_manual(values = c("orange", "powderblue")))
+```
+
+```{r}
+gf_bar(~month, fill = ~tip, data = taxi_modified, position= "fill") %>%
+  gf_labs(title = "Plot D: Counts of Tips by Month") %>% 
+  gf_refine(scale_fill_manual(values = c("orange", "powderblue")))
+```
+
+```{r}
+##
+gf_bar(~ month | dow, fill = ~tip, data = taxi_modified) %>%
+  gf_labs(title = "Plot E: Counts of Tips by Day of Week and Month") %>% 
+   gf_refine(scale_fill_manual(values = c("orange", "powderblue")))
+```
+
+```{r}
+##
+## This may be too busy a graph...
+gf_bar(~ dow | hour, fill = ~tip, data = taxi_modified) %>%
+  gf_labs(
+    title = "Plot F: Counts of Tips by Hour and Day of Week",
+    subtitle = "Is this plot arrangement easy to grasp?"
+  ) %>%  gf_refine(scale_fill_manual(values = c("orange", "powderblue"))) %>% 
+   gf_theme(theme(axis.text.x = element_text(size = 6, angle = 45, hjust = 1))) %>% 
+  gf_theme(theme(axis.text.y = element_text(size = 4, hjust = 1)))
+```
+
+```{r}
+## This is better!
+gf_bar(~ hour | dow, fill = ~tip, data = taxi_modified) %>%
+  gf_labs(
+    title = "Plot G: Counts of Tips by Hour and Day of Week",
+    subtitle = "Swapped the Facets"
+  ) %>% 
+  gf_theme(theme(axis.text.x = element_text(size = 4, hjust = 1))) %>% 
+  gf_refine(scale_fill_manual(values = c("orange", "powderblue")))
+```
+
+```{r}
+gf_bar(~ dow | hour, fill = ~tip, data = taxi_modified, position = "fill") %>%
+  gf_labs(
+    title = "Plot F: Counts of Tips by Hour and Day of Week",
+    subtitle = "Is this plot arrangement easy to grasp?"
+  ) %>%  gf_refine(scale_fill_manual(values = c("orange", "powderblue"))) %>% 
+   gf_theme(theme(axis.text.x = element_text(size = 6, angle = 45, hjust = 1))) %>% 
+  gf_theme(theme(axis.text.y = element_text(size = 4, hjust = 1)))
+```
+
+```{r}
+HELPrct
+```
