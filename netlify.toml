@@ -1,5 +1,5 @@
 [build]
-  command = "quarto render"
+  command = "echo $PATH && which quarto && quarto render"
   publish = "_site"
 
 [build.environment]
