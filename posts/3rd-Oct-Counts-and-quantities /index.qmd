@@ -71,7 +71,7 @@ taxi_modified %>% glimpse()
 
 gf_bar(~tip, data = taxi_modified) %>%
   gf_bar(~tip,fill =  ~local) %>% 
-  gf_refine(scale_fill_manual(values = c("orange", "powderblue")))
+  gf_refine(scale_fill_manual(values = c("orange", "powderblue"))) %>% 
   gf_labs(title = "Plot 1A: Counts of Tips") 
  
 ```
