@@ -1,5 +1,5 @@
 [build]
-  command = "apt-get update && apt-get install -y quarto && quarto render"
+  command ="quarto render"
   publish = "_site"
 
 [build.environment]
