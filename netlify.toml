@@ -1,7 +1,8 @@
 
+
 [build]
-  command = "curl -L https://github.com/quarto-dev/quarto-cli/releases/download/v1.3.361/quarto-linux-amd64.tar.gz | tar -xz && ./quarto/bin/quarto render"
-  publish = "_site"
+   command = "curl -L https://github.com/quarto-dev/quarto-cli/releases/latest/download/quarto-linux-amd64.deb -o quarto.deb && dpkg -x quarto.deb ./quarto && ./quarto/usr/bin/quarto render"
+   publish = "_site"
 
 
 [build.environment]
