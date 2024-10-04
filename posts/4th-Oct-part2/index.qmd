@@ -1,0 +1,147 @@
+---
+title: "Playing Around"
+author: "Tanya"
+---
+
+### Playing Around
+
+Here I'm going to take the wage and education data set and play around with it
+
+```{r}
+#| label: setup
+library(tidyverse)
+library(skimr)
+library(ggformula)
+library(crosstable)
+library(mosaic)
+```
+
+```{r}
+WE<- read_delim(file="../../data/SLID.csv",delim=",")
+WE
+```
+
+```{r}
+glimpse(WE)
+```
+
+```{r}
+inspect(WE)
+```
+
+```{r}
+WE.mody<- WE %>% 
+  mutate(
+    sex=as_factor(sex),
+    language=as_factor(language)
+  )
+glimpse(WE.mody)
+```
+
+### Are the number of people of higher wages higher or lower than people with lower wages?
+
+```{r}
+gf_histogram(~wages,
+  data = WE.mody,
+  bins = 100,
+  fill="orange",
+  colour="black"
+) %>%
+  gf_labs(
+    title = "Plot 1A: Wages",
+    caption = "ggformula"
+  )
+```
+
+> From this graph I can infer that people with the wages ranging 0-20 are significantly higher than 20-50.
+
+```{r}
+gf_histogram(~wages,
+  data = WE.mody,
+  bins = 100,
+  fill= ~language,
+  colour="black"
+ ) %>%
+  gf_labs(
+    title = "Plot 2A: Wages and Languages",
+    caption="ggformula"
+  )
+```
+
+```{r}
+gf_histogram(~wages,
+  data = WE.mody,
+  bins = 100,
+  fill= ~language,
+  colour="black",
+  position="fill"
+ ) %>%
+  gf_labs(
+    title = "Plot 2B: Wages and Languages",
+    caption="ggformula"
+  )
+
+```
+
+```{r}
+WE.mody %>%
+  gf_histogram(~wages, fill = ~language, color = "black", alpha = 0.3) %>%
+  gf_facet_wrap(~language) %>%
+  gf_labs(
+    title = "Plot 2C: Wages Filled and Facetted by Languages",
+    caption = "ggformula"
+  ) %>%
+  gf_theme(theme(
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1
+    )
+  ))
+
+
+```
+
+```{r}
+WE.mody %>% 
+  group_by(language) %>% 
+  summarize(avg_w=mean(wages, na.rm=TRUE),count=n())
+```
+
+> We can infer from these graphs that English speaking people get more jobs but the average in all the language's wages are similar.
+
+### Which sex receives a higher wage?
+
+```{r}
+gf_histogram(~wages,
+  data = WE.mody,
+  bins = 100,
+  fill= ~sex,
+  colour="black"
+ ) %>%
+  gf_labs(
+    title = "Plot 2A: Wages and Sex",
+    caption="ggformula"
+  )
+```
+
+```{r}
+gf_histogram(~wages,
+  data = WE.mody,
+  bins = 100,
+  fill= ~sex,
+  colour="black",
+  position="fill"
+ ) %>%
+  gf_labs(
+    title = "Plot 3B: Wages and Sex",
+    caption="ggformula"
+  )
+```
+
+```{r}
+WE.mody %>% 
+  group_by(sex) %>% 
+  summarize(avg_w=mean(wages, na.rm=TRUE),count=n())
+```
+
+> > As we can infer from these graphs and table we can see that Males generally receive higher wages than Females.
