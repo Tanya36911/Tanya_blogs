@@ -8,7 +8,7 @@
 
 <meta name="author" content="Tanya">
 
-<title>Counts and Quantities – Tanya_blogs</title>
+<title>3rd Oct: Counts and Quantities – Tanya_blogs</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -148,7 +148,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Counts and Quantities</h1>
+      <h1 class="title">3rd Oct: Counts and Quantities</h1>
                       </div>
   </div>
     
@@ -178,6 +178,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
+<section id="class-stuff" class="level3">
+<h3 class="anchored" data-anchor-id="class-stuff">Class Stuff</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -636,8 +638,6 @@ $ hour     &lt;fct&gt; 16, 8, 18, 8, 21, 23, 12, 6, 12, 14, 18, 11, 12, 19, 17, 
 </div>
 </div>
 </div>
-<section id="question-4-does-a-tip-depend-upon-the-distance-hour-of-day-and-dowand-month" class="level3">
-<h3 class="anchored" data-anchor-id="question-4-does-a-tip-depend-upon-the-distance-hour-of-day-and-dowand-month"><strong>Question-4: Does a&nbsp;<code>tip</code>&nbsp;depend upon the&nbsp;<code>distance</code>,&nbsp;<code>hour</code>&nbsp;of day, and&nbsp;<code>dow</code>and&nbsp;<code>month</code>?</strong></h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gf_bar</span>(<span class="sc">~</span>hour, <span class="at">fill =</span> <span class="sc">~</span>tip, <span class="at">data =</span> taxi_modified, <span class="at">position =</span> <span class="st">"fill"</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_labs</span>(<span class="at">title =</span> <span class="st">"Plot B: Counts of Tips by Hour"</span>) <span class="sc">%&gt;%</span> </span>
@@ -2571,6 +2571,39 @@ $ hour     &lt;fct&gt; 16, 8, 18, 8, 21, 23, 12, 6, 12, 14, 18, 11, 12, 19, 17, 
 451                0
 452                2
 453                1</code></pre>
+</div>
+</div>
+</section>
+<section id="playing-around" class="level3">
+<h3 class="anchored" data-anchor-id="playing-around">Playing Around!</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>Fertility<span class="ot">&lt;-</span> <span class="fu">read_delim</span>(<span class="at">file=</span><span class="st">"../../data/Fertility.csv"</span>,<span class="at">delim=</span><span class="st">","</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 254654 Columns: 9
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (6): morekids, gender1, gender2, afam, hispanic, other
+dbl (3): rownames, age, work
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>Fertility</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 254,654 × 9
+   rownames morekids gender1 gender2   age afam  hispanic other  work
+      &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;   &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt; &lt;dbl&gt;
+ 1        1 no       male    female     27 no    no       no        0
+ 2        2 no       female  male       30 no    no       no       30
+ 3        3 no       male    female     27 no    no       no        0
+ 4        4 no       male    female     35 yes   no       no        0
+ 5        5 no       female  female     30 no    no       no       22
+ 6        6 no       male    female     26 no    no       no       40
+ 7        7 no       female  male       29 no    no       no        0
+ 8        8 no       male    male       33 no    no       no       52
+ 9        9 no       female  male       29 no    no       no        0
+10       10 no       male    female     27 no    no       no        0
+# ℹ 254,644 more rows</code></pre>
 </div>
 </div>
 

@@ -3,7 +3,7 @@ title: "27th september: Summarising Data"
 author: "Tanya"
 ---
 
-#### Introduction
+### Introduction
 
 Today we are learning to summarize data so we can get relevant data that is significant to us.
 
@@ -86,7 +86,7 @@ mpg_modified <- mpg %>%
 glimpse(mpg_modified)
 ```
 
-#### Playing Around!!
+### Playing Around!!
 
 I imported the library baby names and will try summarizing it.
 
@@ -106,3 +106,92 @@ babynames_modified <- babynames %>%
 glimpse(babynames_modified)
 
 ```
+
+### Math anxiety data set !
+
+```{r}
+Meth<- read_delim(file="../../data/MathAnxiety.csv",delim=(";"))
+Meth
+```
+
+```{r}
+glimpse(Meth)
+```
+
+```{r}
+inspect(Meth)
+```
+
+Now since Gender and Grade are Qaul data sets that have two levels, I will use the the mutate command to convert them into factors.
+
+```{r}
+Meth_modified <- Meth %>%
+  dplyr::mutate(
+    Gender = as_factor(Gender),
+    Grade = as_factor(Grade)
+  )
+glimpse(Meth_modified)
+```
+
+Here I'm just trying to understand the data set a little bit better by seeing the amount of each variable we have and comparing the two factors as well.
+
+```{r}
+Meth_modified %>% count(Gender)
+Meth_modified %>% count(Grade)
+Meth_modified %>%
+  count(across(where(is.factor)))
+```
+
+#### Which gender gets the better scores in general?
+
+```{r}
+Meth_modified %>%
+  group_by(Gender) %>%
+  summarize(average_s = mean(Arith), count = n())
+```
+
+> Eventhough we have very few entries from secondary school girls, the average for arith scores is higher for girls.
+
+#### Which gender generally scores higher on an AMAS? (Abbreviated Math Anxiety Scale)
+
+```{r}
+Meth_modified %>%
+  group_by(Gender) %>%
+  summarize(average_amas = mean(AMAS), count = n()) 
+
+```
+
+> This indicates that girls tend to have more math anxiety than boys.
+
+#### Which gender has a higher RCMAS score?
+
+```{r}
+Meth_modified %>%
+  group_by(Gender) %>%
+  summarize(average_rcmas = mean(RCMAS), count = n()) 
+
+```
+
+> both of these tables tell us that girls in general have more anxiety that boys which also may contribute to their math anxiety as well. But is it due to the anxiety that girls get better scores than guys?
+
+#### Which grade has a higher RCMAS score?
+
+```{r}
+Meth_modified %>%
+  group_by(Grade) %>%
+   
+  summarize(average_rcmas = mean(RCMAS), count = n()) 
+```
+
+> Unexpectedly Secondary School averaged a lesser anxiety score than primary School.
+
+#### Seeing that primary school has more anxiety in general, does this mean they have higher AMAS score as well?
+
+```{r}
+Meth_modified %>%
+  group_by(Grade) %>%
+   
+  summarize(average_amas = mean(AMAS), count = n()) 
+```
+
+> again, Unexpectedly Secondary has a higher math anxiety even though they had a lower overall anxiety score compared to the Primary School students.

@@ -1,5 +1,5 @@
 ---
-title: "My name is Tanya Michelle Justin"
+title: "26th Sep: First day of being a peasant"
 author: "Tanya"
 ---
 
@@ -9,6 +9,8 @@ This is a ridiculous thing I'm writing in Arvinds class.
 
 ### My First Piece Of R Code
 
+setting up libraries
+
 ```{r}
 #| label: setup
 library(tidyverse)
@@ -17,13 +19,19 @@ library(babynames)
 
 ```
 
+calling a data set
+
 ```{r}
 babynames
 ```
 
+filtering a data set
+
 ```{r}
 babynames %>% filter(name=="Tanya")
 ```
+
+plotting a data set
 
 ```{r}
 babynames %>% filter(name=="Tanya") %>% 

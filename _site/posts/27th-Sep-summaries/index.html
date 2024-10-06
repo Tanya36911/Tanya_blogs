@@ -178,8 +178,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="introduction" class="level4">
-<h4 class="anchored" data-anchor-id="introduction">Introduction</h4>
+<section id="introduction" class="level3">
+<h3 class="anchored" data-anchor-id="introduction">Introduction</h3>
 <p>Today we are learning to summarize data so we can get relevant data that is significant to us.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -605,8 +605,8 @@ $ class        &lt;fct&gt; compact, compact, compact, compact, compact, compact,
 </div>
 </div>
 </section>
-<section id="playing-around" class="level4">
-<h4 class="anchored" data-anchor-id="playing-around">Playing Around!!</h4>
+<section id="playing-around" class="level3">
+<h3 class="anchored" data-anchor-id="playing-around">Playing Around!!</h3>
 <p>I imported the library baby names and will try summarizing it.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(babynames)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -640,8 +640,216 @@ $ n    &lt;int&gt; 7065, 2604, 2003, 1939, 1746, 1578, 1472, 1414, 1320, 1288, 1
 $ prop &lt;dbl&gt; 0.07238359, 0.02667896, 0.02052149, 0.01986579, 0.01788843, 0.016…</code></pre>
 </div>
 </div>
+</section>
+<section id="math-anxiety-data-set" class="level3">
+<h3 class="anchored" data-anchor-id="math-anxiety-data-set">Math anxiety data set !</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>Meth<span class="ot">&lt;-</span> <span class="fu">read_delim</span>(<span class="at">file=</span><span class="st">"../../data/MathAnxiety.csv"</span>,<span class="at">delim=</span>(<span class="st">";"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 599 Columns: 6
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ";"
+chr (2): Gender, Grade
+dbl (3): AMAS, RCMAS, Arith
+num (1): Age
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>Meth</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 599 × 6
+     Age Gender Grade      AMAS RCMAS Arith
+   &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1  1378 Boy    Secondary     9    20     6
+ 2  1407 Boy    Secondary    18     8     6
+ 3  1379 Girl   Secondary    23    26     5
+ 4  1428 Girl   Secondary    19    18     7
+ 5  1356 Boy    Secondary    23    20     1
+ 6  1350 Girl   Secondary    27    33     1
+ 7  1336 Boy    Secondary    22    23     4
+ 8  1393 Boy    Secondary    17    11     7
+ 9  1317 Girl   Secondary    28    32     2
+10  1348 Boy    Secondary    20    30     6
+# ℹ 589 more rows</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(Meth)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 599
+Columns: 6
+$ Age    &lt;dbl&gt; 1378, 1407, 1379, 1428, 1356, 1350, 1336, 1393, 1317, 1348, 141…
+$ Gender &lt;chr&gt; "Boy", "Boy", "Girl", "Girl", "Boy", "Girl", "Boy", "Boy", "Gir…
+$ Grade  &lt;chr&gt; "Secondary", "Secondary", "Secondary", "Secondary", "Secondary"…
+$ AMAS   &lt;dbl&gt; 9, 18, 23, 19, 23, 27, 22, 17, 28, 20, 16, 20, 21, 36, 16, 27, …
+$ RCMAS  &lt;dbl&gt; 20, 8, 26, 18, 20, 33, 23, 11, 32, 30, 10, 4, 23, 26, 24, 21, 3…
+$ Arith  &lt;dbl&gt; 6, 6, 5, 7, 1, 1, 4, 7, 2, 6, 2, 5, 2, 6, 2, 7, 2, 4, 7, 3, 8, …</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">inspect</span>(Meth)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+categorical variables:  
+    name     class levels   n missing
+1 Gender character      2 599       0
+2  Grade character      2 599       0
+                                   distribution
+1 Boy (53.9%), Girl (46.1%)                    
+2 Primary (66.9%), Secondary (33.1%)           
+
+quantitative variables:  
+   name   class min     Q1 median     Q3  max       mean         sd   n missing
+1   Age numeric  37 1061.5   1208 1418.5 1875 1246.49249 223.112183 599       0
+2  AMAS numeric   4   18.0     22   26.5   45   21.98164   6.597962 599       0
+3 RCMAS numeric   1   14.0     19   25.0   41   19.24040   7.566802 599       0
+4 Arith numeric   0    4.0      6    7.0    8    5.30217   2.105220 599       0</code></pre>
+</div>
+</div>
+<p>Now since Gender and Grade are Qaul data sets that have two levels, I will use the the mutate command to convert them into factors.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>Meth_modified <span class="ot">&lt;-</span> Meth <span class="sc">%&gt;%</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">Gender =</span> <span class="fu">as_factor</span>(Gender),</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">Grade =</span> <span class="fu">as_factor</span>(Grade)</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(Meth_modified)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 599
+Columns: 6
+$ Age    &lt;dbl&gt; 1378, 1407, 1379, 1428, 1356, 1350, 1336, 1393, 1317, 1348, 141…
+$ Gender &lt;fct&gt; Boy, Boy, Girl, Girl, Boy, Girl, Boy, Boy, Girl, Boy, Boy, Boy,…
+$ Grade  &lt;fct&gt; Secondary, Secondary, Secondary, Secondary, Secondary, Secondar…
+$ AMAS   &lt;dbl&gt; 9, 18, 23, 19, 23, 27, 22, 17, 28, 20, 16, 20, 21, 36, 16, 27, …
+$ RCMAS  &lt;dbl&gt; 20, 8, 26, 18, 20, 33, 23, 11, 32, 30, 10, 4, 23, 26, 24, 21, 3…
+$ Arith  &lt;dbl&gt; 6, 6, 5, 7, 1, 1, 4, 7, 2, 6, 2, 5, 2, 6, 2, 7, 2, 4, 7, 3, 8, …</code></pre>
+</div>
+</div>
+<p>Here I’m just trying to understand the data set a little bit better by seeing the amount of each variable we have and comparing the two factors as well.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>Meth_modified <span class="sc">%&gt;%</span> <span class="fu">count</span>(Gender)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 2
+  Gender     n
+  &lt;fct&gt;  &lt;int&gt;
+1 Boy      323
+2 Girl     276</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>Meth_modified <span class="sc">%&gt;%</span> <span class="fu">count</span>(Grade)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 2
+  Grade         n
+  &lt;fct&gt;     &lt;int&gt;
+1 Secondary   198
+2 Primary     401</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>Meth_modified <span class="sc">%&gt;%</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.factor)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 3
+  Gender Grade         n
+  &lt;fct&gt;  &lt;fct&gt;     &lt;int&gt;
+1 Boy    Secondary   124
+2 Boy    Primary     199
+3 Girl   Secondary    74
+4 Girl   Primary     202</code></pre>
+</div>
+</div>
+<section id="which-gender-gets-the-better-scores-in-general" class="level4">
+<h4 class="anchored" data-anchor-id="which-gender-gets-the-better-scores-in-general">Which gender gets the better scores in general?</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>Meth_modified <span class="sc">%&gt;%</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Gender) <span class="sc">%&gt;%</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">average_s =</span> <span class="fu">mean</span>(Arith), <span class="at">count =</span> <span class="fu">n</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 3
+  Gender average_s count
+  &lt;fct&gt;      &lt;dbl&gt; &lt;int&gt;
+1 Boy         5.27   323
+2 Girl        5.34   276</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>Eventhough we have very few entries from secondary school girls, the average for arith scores is higher for girls.</p>
+</blockquote>
+</section>
+<section id="which-gender-generally-scores-higher-on-an-amas-abbreviated-math-anxiety-scale" class="level4">
+<h4 class="anchored" data-anchor-id="which-gender-generally-scores-higher-on-an-amas-abbreviated-math-anxiety-scale">Which gender generally scores higher on an AMAS? (Abbreviated Math Anxiety Scale)</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>Meth_modified <span class="sc">%&gt;%</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Gender) <span class="sc">%&gt;%</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">average_amas =</span> <span class="fu">mean</span>(AMAS), <span class="at">count =</span> <span class="fu">n</span>()) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 3
+  Gender average_amas count
+  &lt;fct&gt;         &lt;dbl&gt; &lt;int&gt;
+1 Boy            21.2   323
+2 Girl           22.9   276</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>This indicates that girls tend to have more math anxiety than boys.</p>
+</blockquote>
+</section>
+<section id="which-gender-has-a-higher-rcmas-score" class="level4">
+<h4 class="anchored" data-anchor-id="which-gender-has-a-higher-rcmas-score">Which gender has a higher RCMAS score?</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>Meth_modified <span class="sc">%&gt;%</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Gender) <span class="sc">%&gt;%</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">average_rcmas =</span> <span class="fu">mean</span>(RCMAS), <span class="at">count =</span> <span class="fu">n</span>()) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 3
+  Gender average_rcmas count
+  &lt;fct&gt;          &lt;dbl&gt; &lt;int&gt;
+1 Boy             18.1   323
+2 Girl            20.6   276</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>both of these tables tell us that girls in general have more anxiety that boys which also may contribute to their math anxiety as well. But is it due to the anxiety that girls get better scores than guys?</p>
+</blockquote>
+</section>
+<section id="which-grade-has-a-higher-rcmas-score" class="level4">
+<h4 class="anchored" data-anchor-id="which-grade-has-a-higher-rcmas-score">Which grade has a higher RCMAS score?</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>Meth_modified <span class="sc">%&gt;%</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Grade) <span class="sc">%&gt;%</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>   </span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">average_rcmas =</span> <span class="fu">mean</span>(RCMAS), <span class="at">count =</span> <span class="fu">n</span>()) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 3
+  Grade     average_rcmas count
+  &lt;fct&gt;             &lt;dbl&gt; &lt;int&gt;
+1 Secondary          18.5   198
+2 Primary            19.6   401</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>Unexpectedly Secondary School averaged a lesser anxiety score than primary School.</p>
+</blockquote>
+</section>
+<section id="seeing-that-primary-school-has-more-anxiety-in-general-does-this-mean-they-have-higher-amas-score-as-well" class="level4">
+<h4 class="anchored" data-anchor-id="seeing-that-primary-school-has-more-anxiety-in-general-does-this-mean-they-have-higher-amas-score-as-well">Seeing that primary school has more anxiety in general, does this mean they have higher AMAS score as well?</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>Meth_modified <span class="sc">%&gt;%</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Grade) <span class="sc">%&gt;%</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>   </span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">average_amas =</span> <span class="fu">mean</span>(AMAS), <span class="at">count =</span> <span class="fu">n</span>()) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 3
+  Grade     average_amas count
+  &lt;fct&gt;            &lt;dbl&gt; &lt;int&gt;
+1 Secondary         22.3   198
+2 Primary           21.8   401</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>again, Unexpectedly Secondary has a higher math anxiety even though they had a lower overall anxiety score compared to the Primary School students.</p>
+</blockquote>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

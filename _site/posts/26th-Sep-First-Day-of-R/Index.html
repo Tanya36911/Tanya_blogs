@@ -8,7 +8,7 @@
 
 <meta name="author" content="Tanya">
 
-<title>My name is Tanya Michelle Justin – Tanya_blogs</title>
+<title>26th Sep: First day of being a peasant – Tanya_blogs</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -148,7 +148,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">My name is Tanya Michelle Justin</h1>
+      <h1 class="title">26th Sep: First day of being a peasant</h1>
                       </div>
   </div>
     
@@ -183,6 +183,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>This is a ridiculous thing I’m writing in Arvinds class.</p>
 <section id="my-first-piece-of-r-code" class="level3">
 <h3 class="anchored" data-anchor-id="my-first-piece-of-r-code">My First Piece Of R Code</h3>
+<p>setting up libraries</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -219,6 +220,7 @@ New to ggformula?  Try the tutorials:
 </div>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(babynames)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>calling a data set</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>babynames</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -238,6 +240,7 @@ New to ggformula?  Try the tutorials:
 # ℹ 1,924,655 more rows</code></pre>
 </div>
 </div>
+<p>filtering a data set</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>babynames <span class="sc">%&gt;%</span> <span class="fu">filter</span>(name<span class="sc">==</span><span class="st">"Tanya"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -257,6 +260,7 @@ New to ggformula?  Try the tutorials:
 # ℹ 124 more rows</code></pre>
 </div>
 </div>
+<p>plotting a data set</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>babynames <span class="sc">%&gt;%</span> <span class="fu">filter</span>(name<span class="sc">==</span><span class="st">"Tanya"</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_line</span>(n<span class="sc">~</span>year)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>

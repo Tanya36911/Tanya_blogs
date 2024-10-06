@@ -1,7 +1,9 @@
 ---
-title: "Counts and Quantities"
+title: "3rd Oct: Counts and Quantities"
 author: "Tanya"
 ---
+
+### Class Stuff
 
 ```{r}
 #| label: setup
@@ -123,8 +125,6 @@ taxi_modified %>%
   gf_theme(theme(axis.text.x = element_text(size = 6, angle = 45, hjust = 1)))
 ```
 
-### **Question-4: Does a `tip` depend upon the `distance`, `hour` of day, and `dow`and `month`?**
-
 ```{r}
 gf_bar(~hour, fill = ~tip, data = taxi_modified, position = "fill") %>%
   gf_labs(title = "Plot B: Counts of Tips by Hour") %>% 
@@ -194,4 +194,11 @@ gf_bar(~ dow | hour, fill = ~tip, data = taxi_modified, position = "fill") %>%
 
 ```{r}
 HELPrct
+```
+
+### Playing Around!
+
+```{r}
+Fertility<- read_delim(file="../../data/Fertility.csv",delim=",")
+Fertility
 ```
