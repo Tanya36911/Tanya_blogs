@@ -1,0 +1,96 @@
+---
+title: "10th October: Change"
+author: "Tanya"
+---
+
+### Change
+
+We will be exploring correlation.
+
+```{r}
+#| label: setup
+library(tidyverse) # Tidy data processing and plotting
+library(ggformula) # Formula based plots
+library(mosaic) # Our go-to package
+library(skimr) # Another Data inspection package
+library(kableExtra) # Making good tables with data
+
+library(GGally) # Corr plots
+library(corrplot) # More corrplots
+library(ggExtra) # Making Combination Plots
+
+# devtools::install_github("rpruim/Lock5withR")
+#library(Lock5withR) # Datasets
+library(palmerpenguins) # A famous dataset
+
+library(easystats) # Easy Statistical Analysis and Charts
+library(correlation) # Different Types of Correlations
+# From the easystats collection of packages
+```
+
+```{r}
+glimpse(penguins)
+
+```
+
+#### Data Munging
+
+```{r}
+penguins_quant <- penguins %>%
+  drop_na() %>%
+  select(where(is.numeric))
+penguins_quant
+```
+
+```{r}
+penguins_quant %>%
+  gf_point(body_mass_g ~ flipper_length_mm) %>%
+  gf_lm() %>%
+  gf_labs(
+    title = "Scatter Plot",
+    subtitle = "Penguins :body mass vs flipper length"
+  )
+```
+
+```{r}
+penguins_quant %>%
+  gf_point(bill_length_mm~ bill_depth_mm) %>%
+  gf_lm() %>%
+  gf_labs(
+    title = "Scatter Plot",
+    subtitle = "Penguins :bill length vs bill depth"
+  )
+```
+
+```{r}
+penguins_quant %>%
+  gf_point(bill_length_mm~ body_mass_g) %>%
+  gf_lm() %>%
+  gf_labs(
+    title = "Scatter Plot",
+    subtitle = "Penguins :bill length vs body mass"
+  )
+```
+
+```{r}
+penguins_quant %>%
+  gf_point(bill_depth_mm~ body_mass_g) %>%
+  gf_lm() %>%
+  gf_labs(
+    title = "Scatter Plot",
+    subtitle = "Penguins :bill depth vs body mass"
+  )
+```
+
+```{r}
+penguins %>%
+  drop_na() %>%
+  gf_point(body_mass_g ~ flipper_length_mm,
+    color = ~ species) %>%
+  gf_lm() %>%
+  gf_labs(
+    title = "Scatter Plot",
+    subtitle = "Penguins: Trends by Species"
+  )
+
+```

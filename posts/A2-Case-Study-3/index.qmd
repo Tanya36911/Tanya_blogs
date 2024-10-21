@@ -1,0 +1,130 @@
+---
+title: "A2: Case Study 3"
+author: "Tanya Michelle Justin"
+---
+
+## Case Study 2- *Movie Profits*
+
+I've chosen the Movie Profits for my 3rd Case study. Here below is the basic setup for the data.
+
+```{r}
+#| label: setup
+library(tidyverse)
+library(mosaic)
+library(skimr)
+library(ggformula)
+```
+
+Reading the file, glimpsing it and inspecting it.
+
+```{r}
+mov <- read.csv(file = "../../Data/movie_profit.csv", sep = ";")
+mov
+glimpse(mov)
+inspect(mov)
+mov <- mov %>% 
+  mutate(
+    release_date = as_date(release_date),
+    domestic_gross = as.double(domestic_gross),
+     profit_ratio = as.double(gsub(",", "", profit_ratio)),
+    worldwide_gross = as.double(worldwide_gross),
+    distributor = as_factor(distributor),
+    production_budget = as.double(production_budget),
+    decade = as.double(decade)
+  )
+glimpse(mov)
+
+```
+
+### Data Dictionary
+
+#### Quantitative Data:
+
+-   production_budget
+
+-   domestic_gross
+
+-   worldwide_gross
+
+-   profit_ratio
+
+-   decade
+
+#### Qualitative Data:
+
+-   movie
+
+-   distributor
+
+-   mpaa_rating
+
+-   genre
+
+-   release_date
+
+#### Target Variable:
+
+My target variable would be Ratio of profits and the factors that affect it.
+
+#### Predictor Variables:
+
+My predictor variables would be the Genre and the distributor.
+
+### How could have the experiment been conducted?
+
+The research experiment could be conducted by gathering a data set of films released over the last five years. For each movie, data would be extracted on its production budget and box office revenue, as well as other revenue streams like streaming and DVD sales, to calculate the profit ratio. The study would focus on a manageable time frame, grouping the data by distributor and genre to calculate the median profit ratio for each combination. This approach allows for examining the distribution of profit ratios to determine if certain genres or distributors are generally more profitable.
+
+### **Potential Research Questions (looking at the original graph)**
+
+-   How does Ratio of Profits vary based on Genre?
+
+-   Which Distributor makes the highest Ratio of Profits?
+
+-   Which Genre is the most profitable in each distributor?
+
+-   What is the median profit across distributors?
+
+#### Graph 1
+
+This is the closest I could get to the original. I learned something new called stat summary here, it can calculate the mean median and mode of the data. This is a sub function in ggplot. Geom also is a function, just like gf and also helps with plotting of the data. I am using the type geom_bar here. coord flip switches the axis.
+
+```{r}
+ggplot(mov, aes(x = genre, y = profit_ratio)) +
+  facet_wrap(vars(distributor))+
+  stat_summary(fun = "median", geom = "bar") +
+  labs(title = "Profits made by film distributors", subtitle = "Ratio of profits to budgets", x = "Genre", y = "Median Profit Ratio")+  
+  coord_flip()
+```
+
+#### Final Graph
+
+Over here I wanted to make the y axis similar to the original graph but could not figure out how to space it out visually. I was able to define what I wanted but it wasn't mapped to the profits and i couldn't figure out how to do that.
+
+```{r}
+
+
+ggplot(mov, aes(x = genre, y = profit_ratio)) +
+  facet_wrap(vars(distributor)) +
+  stat_summary(fun = "median", geom = "bar") +
+  scale_y_discrete(
+    limits =c("0", "1x", "2x", "3x"),
+    breaks=c("0", "1x", "2x", "3x")
+  ) +
+  labs(title = "Profits Made by Film Distributors", 
+       subtitle = "Ratio of Profits to Budgets", 
+       x = "Genre", 
+       y = "Median Profit Ratio") +  
+  coord_flip()
+```
+
+### Inference
+
+-   Horror and adventure are the most profitable genres across distributors.
+
+-   Paramount and Universal seem to be the most profitable compared to other distributors.
+
+-   Drama and Comedy are the least profitable genres across distributors.
+
+### My Story
+
+This was actually pretty fun to do as I had learnt most of the syntax for ggplot with my previous case studies. It was fun to learn as it wasn't throwing up as many errors as expected. I learnt stuff like stat_summary and coord flip.

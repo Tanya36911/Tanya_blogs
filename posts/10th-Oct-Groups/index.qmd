@@ -1,0 +1,189 @@
+---
+title: "10th October: Groups"
+author: "Tanya"
+---
+
+### Groups
+
+Today we will be looking at box plots and understanding the results we get from them. Box plots focuses on *median* and upper and lower *quartiles.*
+
+```{r}
+#| label: setup
+library(tidyverse)
+library(mosaic)
+library(ggformula)
+library(palmerpenguins)
+```
+
+#### Wages Data
+
+```{r}
+wages <- read_csv("https://vincentarelbundock.github.io/Rdatasets/csv/stevedata/gss_wages.csv")
+```
+
+```{r}
+glimpse(wages)
+inspect(wages)
+
+```
+
+```{r}
+wages.mody<- wages %>% 
+  mutate(
+    gender=as_factor(gender),
+    educcat=as_factor(educcat),
+    maritalcat=as_factor(maritalcat),
+    wrkstat=as_factor(wrkstat),
+    occrecode=as_factor(occrecode)
+    
+  )
+glimpse(wages.mody)
+```
+
+#### Data Munging
+
+There is a lost of missing data in the variable *realrinc* so we will be dropping them.
+
+```{r}
+wages.mody <-
+  wages.mody %>%
+  tidyr::drop_na(realrinc) 
+```
+
+#### what is the basic distribution of realrinc?
+
+```{r}
+
+wages.mody %>%
+  gf_boxplot( (realrinc)~ "Income") %>% # Dummy X-axis "variable"
+  gf_labs(
+    title = "Plot 1A: Income has a skewed distribution",
+    subtitle = "Many outliers on the high side"
+  )
+```
+
+#### Is Realrinc affected by gender?
+
+```{r}
+wages.mody %>%
+  gf_boxplot(gender ~ realrinc) %>%
+  gf_labs(title = "Plot 2A: Income by Gender")
+```
+
+```{r}
+wages.mody %>%
+  gf_boxplot(gender ~ log10(realrinc)) %>%
+  gf_labs(title = "Plot 2B: Log(Income) by Gender")
+```
+
+```{r}
+wages.mody %>%
+  gf_boxplot(gender ~ realrinc, fill = ~gender) %>%
+  gf_refine(scale_x_log10()) %>%
+  gf_labs(title = "Plot 2C: Income filled by Gender, log scale")
+```
+
+#### Insights
+
+-   Income is a highly skewed distribution
+
+-   the mediums of male and female are highly varied.
+
+-   the IQR is Lower for males than females.
+
+-   there are outliers on both sides meaning that some people make a lots of money and some people make very less money.
+
+#### Is Realinc affected by educcat?
+
+```{r}
+wages.mody %>%
+  gf_boxplot(educcat ~ realrinc) %>%
+  gf_labs(title = "Plot 3A: Income by Education Category")
+```
+
+```{r}
+wages.mody %>%
+  gf_boxplot(educcat ~ log10(realrinc)) %>%
+  gf_labs(title = "Plot 3B: Log(Income) by Education Category")
+```
+
+```{r}
+wages.mody %>%
+  gf_boxplot(
+    reorder(educcat, realrinc, FUN = median) ~ log(realrinc),
+    fill = ~educcat,
+    alpha = 0.3
+  ) %>%
+  gf_labs(title = "Plot 3C: Log(Income) by Education Category, sorted") %>%
+  gf_labs(
+    x = "Log Income",
+    y = "Education Category"
+  )
+```
+
+```{r}
+wages.mody %>%
+  gf_boxplot(reorder(educcat, realrinc, FUN = median) ~ realrinc,
+    fill = ~educcat,
+    alpha = 0.5
+  ) %>%
+  gf_refine(scale_x_log10()) %>%
+  gf_labs(
+    title = "Plot 3D: Income by Education Category, sorted",
+    subtitle = "Log Income"
+  ) %>%
+  gf_labs(
+    x = "Income",
+    y = "Education Category"
+  )
+```
+
+#### Insights
+
+-   many Outliers therefor ppl do make very high or very low income
+
+-   medians do increase in terms of educcat which means educcat does affect realrinc
+
+#### Is Realrinc affected by combination of factors?
+
+```{r}
+wages.mody %>%
+  drop_na() %>%
+  gf_boxplot(reorder(educcat, realrinc) ~ log10(realrinc),
+    fill = ~educcat,
+    alpha = 0.5
+  ) %>%
+  gf_facet_wrap(vars(childs)) %>%
+  gf_refine(scale_fill_brewer(type = "qual", palette = "Dark2")) %>%
+  gf_labs(
+    title = "Plot 4A: Log Income by Education Category and Family Size",
+    x = "Log income",
+    y = "No. of Children"
+  )
+```
+
+```{r}
+wages.mody %>%
+  drop_na() %>%
+  mutate(childs = as_factor(childs)) %>%
+  gf_boxplot(childs ~ log10(realrinc),
+    group = ~childs,
+    fill = ~childs,
+    alpha = 0.5
+  ) %>%
+  gf_facet_wrap(~gender) %>%
+  gf_refine(scale_fill_brewer(type = "qual", palette = "Set3")) %>%
+  gf_labs(
+    title = "Plot 4B: Log Income by Gender and Family Size",
+    x = "Log income",
+    y = "No. of Children"
+  )
+```
+
+#### Insights
+
+-   realrinc increases with educcat regardless of family size till less than equal to 7 children
+
+-   with gender for females the median slightly decreases while for males it increases till less than equal to 4 children.
+
+-   males have a higher number of high income outliers which means they generally get a higher income.

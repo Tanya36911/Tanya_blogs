@@ -1,0 +1,215 @@
+---
+title: "A2: Case Study 2"
+author: "Tanya Michelle Justin"
+---
+
+## Case Study 2- *Ikea Furniture*
+
+I've chosen the Ikea Furniture for my 2nd Case study. Here below is the basic setup for the data.
+
+```{r}
+#| label: setup
+library(tidyverse)
+library(mosaic)
+library(skimr)
+library(ggformula)
+library(ggridges)
+# devtools::install_github('cttobin/ggthemr')
+library(ggthemr)
+library(ggsci)
+```
+
+Reading The File and glimpsing it.
+
+```{r}
+Ikea<- read_delim(file="../../data/ikea.csv",delim=";")
+Ikea
+glimpse(Ikea)
+inspect(Ikea)
+```
+
+### Data Dictionary
+
+#### Qualitative Data:
+
+-   item_Id
+
+-   name
+
+-   category
+
+-   designer
+
+-   short_description
+
+-   other_colours
+
+-   link
+
+-   sellable_online
+
+#### Quantitative Data:
+
+-   price
+
+-   depth
+
+-   height
+
+-   width
+
+-   price_usd
+
+-   category_total
+
+-   old_price
+
+#### Target Variable:
+
+I think my target variable would be price and see what factors affect the variable price.
+
+#### Predictor Variables:
+
+My predictor variables would be category, sellable_online, depth, height, width, designer, other_colours and old price.
+
+### How could have the experiment been conducted?
+
+A database of furniture would've been built by Ikea , including detailed attributes such as dimensions, colour, price, old price, previous prices, and designer names. Online availability and links to the product's online listing were probably recorded by searching up item Id. Previous prices (old_price) were probably in the database itself.
+
+#### **Other Hypotheses that can be made** :
+
+-   **H1**: Products designed by more well-known designers or those with unique attributes (e.g., more colors) are priced higher and sell better online.
+
+-   **H2**: Larger products (greater depth, width, and height) are priced higher due to material costs and complexity.
+
+-   **H3**: Products that have been discounted (old_price vs. price) experience increased online sales compared to full-priced items.
+
+### **Potential Research Questions (looking at the original graph)**
+
+-   How does the availability of multiple color options affect the price of IKEA items in different categories?
+
+-   What is the typical price range for different categories of IKEA products?
+
+-   Is there a correlation between product price and the availability of multiple color options?
+
+### Graph 1
+
+This is the first graph that I tried out. I changed category into a factor and then proceeded to drop any values that aren't there in the data set. I then used gf_density to plot the graph. This gave me a faceted graph, therefor I looked at the density chapter on the website and discovered something called gf_density_ridges, so the next graph I tried to use that.
+
+```{r}
+
+Ikea <- Ikea %>%
+  mutate(category = as.factor(category)) %>% 
+    drop_na(price, category, other_colors)
+
+
+# Create a ridge plot using gf_density()
+gf_density(
+  ~ price | category, 
+  data = Ikea, 
+  fill = ~ other_colors,
+  color = ~ other_colors,
+  adjust = 1, 
+  alpha = 0.6 
+) +
+  scale_x_log10() +  
+  labs(
+    title = "How much do items in each IKEA category cost?",
+    subtitle = "Are they available in other colors?",
+    x = "Price (USD)",
+    y = ""
+  ) 
+  
+
+```
+
+### Graph 2
+
+When I tried to use gf_density_ridges I came across a lot of errors regarding the aesthetics of y, which I honestly wasn't able to comprehend. With the help of AI-tools i came across something called geom_density_ridges and all my problems went away. I was getting closer to the graph. Now after looking at this graph I realised I had to change the X values to logs of 10.
+
+```{r}
+
+
+ikea_data_clean <- Ikea %>%
+  mutate(price = as.numeric(price), 
+         category = as.factor(category),
+         other_colors = as.factor(other_colors)) %>%  
+  drop_na(price, category, other_colors)
+
+
+ggplot(ikea_data_clean, aes(x = price, y = category, fill = other_colors)) +
+  geom_density_ridges(alpha = 0.3, rel_min_height = 0.005) +
+  scale_x_continuous(limits = c(0, 10000)) +  
+  labs(
+    title = "How much do items in each IKEA category cost?",
+    subtitle = "Are they available in other colors?",
+    x = "Price (USD)",
+    y = "Category"
+  ) 
+  
+```
+
+### Graph 3
+
+I discovered something called breaks here to have the X axis values that I wanted but then it wasn't still spaced out so I tried the next graph.
+
+```{r}
+
+
+ikea_data_clean <- Ikea %>%
+  mutate(price = as.numeric(price), 
+         category = as.factor(category),
+         other_colors = as.factor(other_colors)) 
+  drop_na(price, category, other_colors)
+
+ggplot(ikea_data_clean, aes(x = price, y = category, fill = other_colors)) +
+  geom_density_ridges(alpha = 0.3, rel_min_height = 0.005) +
+  scale_x_continuous(
+    limits = c(0, 10000),          
+    breaks = c(1, 10, 100, 1000, 10000)  
+  ) +
+  labs(
+    title = "How much do items in each IKEA category cost?",
+    subtitle = "Are they available in other colors?",
+    x = "Price (USD)",
+    y = "Category"
+  ) 
+ 
+```
+
+### Final Graph
+
+This was the closest I could get to the final graph. Instead of using scale_x_continuous I used something called scale_x_log10 which helped me space out the values visually. One problem I had with this graph is that the values are skewed a little bit to the right side compared to the original graph.
+
+```{r}
+ikea_data_clean <- Ikea %>%
+  mutate(price = as.numeric(price), 
+         category = as.factor(category),
+         other_colors = as.factor(other_colors)) %>% 
+  drop_na(price, category, other_colors)
+
+
+ggplot(ikea_data_clean, aes(x = price, y = category, fill = other_colors)) +
+  geom_density_ridges(alpha = 0.3, rel_min_height = 0.005) +
+  scale_x_log10(  
+    limits = c(1, 10000), 
+    breaks = c(1, 10, 100, 1000, 10000)  
+  ) +
+  labs(
+    title = "How much do items in each IKEA category cost?",
+    subtitle = "Are they available in other colors?",
+    x = "Price (USD)",
+    y = "Category"
+  ) 
+  
+```
+
+### Inference
+
+-   A notable number of items provide options for other colors. Beds with additional color choices typically have a higher average price compared to those without.
+
+-   Certain categories, such as those with storage options, tend to be priced higher probably due to their added functionality and consumer demand.
+
+### My Story
+
+This data set actually took me a lot of time to understand and visualize. I did learn a lot with this data set such as density plots and ridges and exploring their functionality. After finishing the first two case studies I realised that the geom function is a lot more easier to use after learning the syntax for it. It throws up a lot less erros and that is very nice :').
