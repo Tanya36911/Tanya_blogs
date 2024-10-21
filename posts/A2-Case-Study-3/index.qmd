@@ -98,7 +98,7 @@ ggplot(mov, aes(x = genre, y = profit_ratio)) +
 
 #### Final Graph
 
-Over here I wanted to make the y axis similar to the original graph but could not figure out how to space it out visually. I was able to define what I wanted but it wasn't mapped to the profits and i couldn't figure out how to do that.
+Over here I wanted to make the y axis similar to the original graph but could not figure out how to space it out visually. I was able to define what I wanted but it wasn't mapped to the profits and I couldn't figure out how to do that.
 
 ```{r}
 

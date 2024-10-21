@@ -156,11 +156,7 @@ I discovered something called breaks here to have the X axis values that I wante
 ```{r}
 
 
-ikea_data_clean <- Ikea %>%
-  mutate(price = as.numeric(price), 
-         category = as.factor(category),
-         other_colors = as.factor(other_colors)) 
-  drop_na(price, category, other_colors)
+
 
 ggplot(ikea_data_clean, aes(x = price, y = category, fill = other_colors)) +
   geom_density_ridges(alpha = 0.3, rel_min_height = 0.005) +
@@ -182,11 +178,7 @@ ggplot(ikea_data_clean, aes(x = price, y = category, fill = other_colors)) +
 This was the closest I could get to the final graph. Instead of using scale_x_continuous I used something called scale_x_log10 which helped me space out the values visually. One problem I had with this graph is that the values are skewed a little bit to the right side compared to the original graph.
 
 ```{r}
-ikea_data_clean <- Ikea %>%
-  mutate(price = as.numeric(price), 
-         category = as.factor(category),
-         other_colors = as.factor(other_colors)) %>% 
-  drop_na(price, category, other_colors)
+
 
 
 ggplot(ikea_data_clean, aes(x = price, y = category, fill = other_colors)) +
@@ -212,4 +204,4 @@ ggplot(ikea_data_clean, aes(x = price, y = category, fill = other_colors)) +
 
 ### My Story
 
-This data set actually took me a lot of time to understand and visualize. I did learn a lot with this data set such as density plots and ridges and exploring their functionality. After finishing the first two case studies I realised that the geom function is a lot more easier to use after learning the syntax for it. It throws up a lot less erros and that is very nice :').
+This data set actually took me a lot of time to understand and visualize. I did learn a lot with this data set such as density plots and ridges and exploring their functionality. After finishing the first two case studies I realised that the geom function is a lot more easier to use after learning the syntax for it. It throws up a lot less errors and that is very nice :').
