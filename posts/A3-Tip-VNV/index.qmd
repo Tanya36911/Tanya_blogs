@@ -1,0 +1,190 @@
+---
+title: "A3: Tips"
+author: "Tanya Michelle Justin"
+---
+
+## **I will eat my tip, thank you**
+
+### What are we trying to find out?
+
+The aim of this experiment is to determine whether there is a significant difference in tipping behavior between individuals who follow a vegetarian diet and those who consume non-vegetarian food.
+
+### How was the data collected?
+
+The sample data for this study was collected from students at MAHE who were available at the time of data gathering. To minimize selection bias, participants were chosen through a coin toss, which determined whether each student would participate in the survey. This sample aims to represent the entire MAHE student population. This data was gathered from 60 individuals, ensuring a balanced sample of 30 vegetarians and 30 non-vegetarians, with an equal number of male and female participants to eliminate potential gender bias. Each student was asked about their dietary preference (vegetarian or non-vegetarian) and shown us their latest Swiggy order to verify the tip amount given to delivery personnel.
+
+```{r}
+#| label: setup
+library(mosaic)
+library(crosstable)
+library(tidyverse)
+library(ggformula)
+
+```
+
+```{r}
+#| label: Reading the Data
+library(readr)
+Tip <- read_csv("../../data/tip.csv")
+Tip
+```
+
+### Data Dictionary:
+
+-   Qualitative Data:
+    -   Gender
+
+    -   Food Preference
+
+    -   Name (not really required)
+-   Quantitative Data:
+    -   Tip
+
+*Target Variable* : Tip
+
+*Predictor* *Variable* : Food Preference
+
+### Crosstables
+
+```{r}
+Tip %>% 
+  crosstable(Tip ~ `Food preferance`) %>% 
+  as_flextable()
+```
+
+*Observations*:
+
+While the mean tipping amounts for vegetarian and non-vegetarian individuals appear to differ, this visible difference alone is not enough to conclude that vegetarians tip more than non-vegetarians.
+
+### Mutating data and making Plots
+
+I just created a another column called fp to replace food preference.
+
+```{r}
+Tip<-Tip %>% 
+  mutate(Fp= as.factor(`Food preferance`))
+Tip
+```
+
+```{r}
+Tip %>% 
+  gf_histogram(~Tip| Fp, fill='blue', colour= 'black') %>% 
+ gf_labs(title = "Tips faceted by Food Prefernce")
+
+```
+
+*Observations* :
+
+As shown in the graph, many people leave no tip at all compared to those who do. In the vegetarian group, there is one individual who tipped 100, which may be contributing significantly to the difference in the mean tipping amount.
+
+### T-Test
+
+The T-test is used to determine whether there is a statistically significant difference between the means of two groups. In this case, it helps us assess whether the difference in average tipping amounts between vegetarians and non-vegetarians is likely due to genuine differences in behavior or simply due to random chance. By applying the T-test, we can determine if the observed difference in means is large enough to support the conclusion that dietary preference (vegetarian or non-vegetarian) influences tipping behavior. In this Test we assume that the data is normal and do it.
+
+```{r}
+mosaic :: t_test(Tip ~ Fp, data = Tip) %>% 
+broom:: tidy()
+  
+  
+```
+
+*Observation*:
+
+A p-value of 0.61 indicates that there is a 61% chance that the observed difference in tipping behavior between vegetarians and non-vegetarians could have occurred by random chance. Since this p-value is much higher than the typical significance level of 0.05, we fail to reject the null hypothesis. This suggests that there is no statistically significant difference in tipping behavior based on dietary preference in this sample.
+
+### Shapiro Test
+
+The Shapiro-Wilk test is used to assess whether a dataset is normally distributed. In statistical analyses, many tests (like the T-test) assume that the data follows a normal distribution. By applying the Shapiro test, we can check if this assumption holds. If the data is normally distributed, we can confidently proceed with parametric tests like the T-test. If the data does not follow a normal distribution, we might consider using non-parametric tests, such as the Mann-Whitney U test (wilcox test) , to analyze differences between groups.
+
+```{r}
+Tip %>% filter(Fp == "Veg") %>% select(Tip) -> Veg
+Tip %>% filter(Fp == "Non-veg") %>% select(Tip) -> NonVeg
+Veg
+NonVeg
+
+shapiro.test(Veg$Tip)
+shapiro.test(NonVeg$Tip)
+
+```
+
+*Observations*:
+
+The Shapiro-Wilk test results for both groups indicate very low p-values (1.661e-07 for vegetarians and 2.747e-06 for non-vegetarians), which are much smaller than the typical significance level of 0.05. This suggests that the tipping data for both vegetarians and non-vegetarians does not follow a normal distribution. Given this, using a parametric test like the T-test may not be appropriate, and a non-parametric alternative, such as the Mann-Whitney U test, could provide a more reliable analysis of the differences between these two groups.
+
+### Mann-Whitney U test ( Wilcox Test )
+
+The Wilcoxon rank-sum test is a non-parametric alternative to the T-test, used to assess whether there is a significant difference between the distributions of two independent groups.
+
+```{r}
+
+wilcox.test(Tip ~ Fp, data = Tip) %>% 
+broom:: tidy()
+  
+
+```
+
+*Observations*:
+
+Since the p-value is much greater than the common significance level of 0.05, we fail to reject the null hypothesis. This suggests that there is no statistically significant difference in tipping behavior between vegetarians and non-vegetarians in the sample.
+
+### Permutation Test
+
+The test is used to assess the null hypothesis, which typically states that there is no difference in tipping amounts between vegetarians and non-vegetarians. The basic idea is to repeatedly shuffle or permute the observed tipping data between the two groups and calculate the test statistic for each permutation, creating a distribution of the test statistic under the null hypothesis. By comparing the observed test statistic (calculated from the actual data) to the distribution generated from the permutations, we can determine the p-value. This p-value indicates the probability of observing a difference as extreme as, or more extreme than, the one observed, under the null hypothesis. Permutation tests can be applied to various types of data and statistics, making it a flexible choice for analyzing the tipping behavior in this experiment.
+
+```{r}
+obs_diff_Fp<- diffmean(Tip~Fp,data=Tip)
+obs_diff_Fp
+```
+
+```{r}
+
+
+null_dist_tip <- 
+  do(4999) * diffmean(data = Tip, 
+                     Tip ~ shuffle(Fp))
+null_dist_tip
+###
+prop1(~ diffmean <= obs_diff_Fp, data = null_dist_tip)
+###
+gf_histogram(data = null_dist_tip, ~ diffmean, 
+             bins = 25) %>%
+  gf_vline(xintercept = obs_diff_Fp, 
+           colour = "red", linewidth = 1,
+           title = "Null Distribution by Permutation", 
+           subtitle = "Histogram") %>% 
+  gf_labs(x = "Difference in Means")
+###
+
+```
+
+### Conclusion
+
+prop True= 0.681: This suggests that based on my analysis, there is a high likelihood (68.16%) that there is no significant difference in tipping behavior between vegetarians and non-vegetarians in this sample. the `observed_diff_fp` is something we can generate with permutations with tip and hence there is no significant difference in tipping across food preference.
+
+### Permutation test with Gender
+
+```{r}
+obs_diff_gender <- diffmean(Tip ~ Gender, data = Tip) 
+obs_diff_gender
+```
+
+```{r}
+null_dist_tip2 <- 
+  do(4999) * diffmean(data = Tip, 
+                      Tip ~ shuffle(Gender))
+null_dist_tip2
+###
+prop1(~ diffmean <= obs_diff_gender, data = null_dist_tip2)
+###
+gf_histogram(data = null_dist_tip2, ~ diffmean, 
+             bins = 25) %>%
+  gf_vline(xintercept = obs_diff_gender, 
+           colour = "purple", linewidth = 1,
+           title = "Null Distribution by Permutation", 
+           subtitle = "Histogram") %>% 
+  gf_labs(x = "Difference in Means")
+```
+
+### Conclusion
+
+**`prop_TRUE = 0.3538`**: This suggests that there is a moderate likelihood (35%) that there is no significant difference in tipping behavior males and females. A lower proportion like this might indicate that the data could suggest some level of difference, but it still does not provide strong evidence to reject the null hypothesis without further analysis. `observed_diff_gender` is something we can generate with permutations with tip and hence there is no significant difference in tipping across food preference.

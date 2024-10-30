@@ -1,0 +1,256 @@
+---
+title: "A3: Grades"
+author: "Tanya Michelle Justin"
+---
+
+## **Art, Design, and Vocation are all diff-different.**
+
+### What are we trying to find out?
+
+The purpose of this experiment is to see whether there is a significant differences in grades between students enrolled in different degree programs at Srishti. We will be evaluating based on the three types of degress which are B.Voc, B.FA, and B.Des.
+
+### How was the data collected?
+
+The sample data for this study was collected from students at Srishti who were available at the time of data gathering. To minimize selection bias, participants were chosen through a coin toss, which determined whether each student would participate in the survey. This sample aims to represent the entire Srishti student population. This data was gathered from 90 individuals, ensuring a balanced sample of 30 B.Voc, 30 B.FA and 30 B.Des students, with an equal number of male and female participants to eliminate potential gender bias. Each student was asked about their grades in their last cycle and which course they took as well.
+
+I believe that if we were to conduct this test again, it would be beneficial to ensure that we have equal samples from each course or maintain an equal ratio compared to the population. This would help eliminate any potential course bias in the data and provide a more accurate representation of the overall population.
+
+```{r}
+#| label: setup
+library(tidyverse)
+library(mosaic)
+library(skimr)
+library(ggformula)
+library(crosstable)
+library(infer) 
+library(patchwork) 
+library(ggprism)
+library(supernova) 
+```
+
+```{r}
+grades <- read.csv("../../data/Grades.csv")
+grades
+```
+
+```{r}
+glimpse(grades)
+
+```
+
+```{r}
+inspect(grades)
+```
+
+### Data Dictionary:
+
+-   Qualitative Data:
+    -   Degree
+
+    -   Course
+
+    -   Letter Grade
+
+    -   Gender
+-   Quantitative Data:
+    -   Score
+    -   Year
+
+*Target Variable* : Score
+
+*Predictor* *Variable* : Degree
+
+### Mutating and plotting the data
+
+```{r}
+grades_modified <- grades %>%
+  dplyr::mutate(
+    Gender = as_factor(Gender),
+    Year = factor(Year,
+      levels = c("1","2","3"),
+      labels = c("1","2","3"),
+      ordered = TRUE),
+    Degree = as_factor(Degree),
+    Course = as_factor(Course)
+    )%>%
+  select(Degree , Course, Year, Gender, Score)
+grades_modified
+```
+
+```{r}
+grades_modified %>%
+  gf_histogram(~Score, fill = ~Degree) %>% 
+  gf_labs(title= "Plotting Scores and facetting with Degree")
+```
+
+```{r}
+grades_modified %>%
+  gf_histogram(~Score, fill = ~Degree) %>% 
+  gf_labs(title = "Distribution of Scores by Degree") %>%
+  gf_facet_wrap(~Degree)
+```
+
+```{r}
+library(ggformula)
+
+grades_modified %>%
+  gf_histogram(~Score, fill = ~Degree, position = "fill") %>%
+  gf_labs(title = "Distribution of Scores by Degree") +
+  coord_flip()
+```
+
+```{r}
+grades_modified %>%
+  gf_density(
+    ~ Score,
+    fill = ~ Degree,
+    alpha = 0.5,
+    title = "Grades Densities by Degrees ",
+    subtitle = "B.Des vs B.Voc us B.FA"
+  )
+```
+
+*Observations*:
+
+As I can see from the graphs B.Des looks like it gets higher grades compared to the other degrees however all values of B.FA are normally above score\>6.
+
+### Crosstables
+
+```{r}
+crosstable(Score ~ Degree, data = grades_modified) %>%
+  crosstable::as_flextable()
+```
+
+*Observations*:
+
+While the mean scores across degrees i appear to differ, this visible difference alone is not enough to conclude that the difference in means is significant.
+
+```{r}
+grades_modified %>%
+  gf_boxplot(Degree ~ Score, fill = ~Degree, alpha=0.5) %>%
+  gf_labs(title = "Box plot of Scores by Degree")
+```
+
+### Anova
+
+ANOVA over here is a method used to compare the average grades of students across different degree programs to see if there are significant differences in their performance. In this case, ANOVA tests the idea that the average grades for all degree programs are the same, considering degree type as a factor influencing grades. Typically, a One-Way ANOVA is used, with grades as the continuous variable and degree as the categorical variable. Key assumptions include that the data points are independent, grades are normally distributed within each degree group, and the variances are similar across groups. The ANOVA results include an F-statistic and a p-value, where a p-value below 0.05 suggests that at least one degree program's average grade is different from the others.
+
+```{r}
+grades_anova <- aov(Score ~ Degree, data = grades_modified) 
+grades_supernova <- supernova::pairwise(grades_anova,
+  correction = "Bonferroni",
+  alpha = 0.05, # 95% CI calculation
+  var_equal = TRUE, 
+  plot = TRUE
+) 
+grades_supernova
+```
+
+*Observations*:
+
+The output shows the results of pairwise comparisons of average grades between different degree programs. For example, the comparison between **B.Voc** and **B.Des** has a mean difference of **-0.173**, suggesting that students in **B.Voc** tend to have lower average grades than those in **B.Des**. the pooled standard error of **0.201** and the t-value of **-0.864** indicate that the difference in means between the two groups is relatively small compared to the variability of the sample means. Given that the t-value is not large enough to reach a critical threshold for significance, this suggests that the difference is not statistically significant. The confidence interval for this difference ranges from **-0.607** to **0.261**, indicating that the difference is not statistically significant since the interval includes zero. Similar interpretations apply to the other comparisons, showing no significant differences among the degree programs based on the data.
+
+### Shapiro Test
+
+Determining whether the data is normal or not.
+
+```{r}
+shapiro.test(x = grades_modified$Score) %>%
+    broom::tidy()
+
+```
+
+*Observations*:
+
+Since the p-value is significantly less than 0.05, this suggests that the data does not follow a normal distribution.
+
+```{r}
+grades_modified %>%
+  group_by(Degree) %>%
+  group_modify(~ .x %>%
+    select(Score) %>%
+    as_vector() %>%
+    shapiro.test() %>%
+    broom::tidy())
+```
+
+*Observations*:
+
+Since all p-values are less than 0.05, we reject the null hypothesis for all three groups, suggesting that the data for these degree programs do not follow a normal distribution. Hence, we should further analyse this sample (Permutation Test).
+
+### Plotting this
+
+```{r}
+grades_modified %>%
+  gf_density( ~ Score,
+              fill = ~ Degree,
+              alpha = 0.5,
+              title = "Score of different degrees vs normal distribution") %>%
+  gf_facet_grid(~ Degree) %>% 
+  gf_fitdistr(dist = "dnorm")
+```
+
+### Test for Variance
+
+```{r}
+grades_modified %>%
+  group_by(Degree) %>%
+  summarise(variance = var(Score))
+```
+
+*Observations*:
+
+The B.Des program exhibits the highest variance, with a value of 1.7, while the B.FA program has the lowest variance at 0.6. Given that our data does not follow a normal distribution, I can apply the Fligner-Killeen test to assess the homogeneity of variances among the different groups.
+
+```{r}
+fligner.test(Score ~ Degree, data = grades_modified)%>%
+    broom::tidy()
+```
+
+*Observations*:
+
+The results of the Fligner-Killeen test indicate that there is no significant difference in variances among the groups (p-value = 0.321309). This suggests that the assumption of homogeneity of variances holds for the data, which is an important consideration for conducting further statistical analyses, such as ANOVA.
+
+### ANOVA using Permutation Tests
+
+Permutation tests are distribution-free, meaning they do not rely on specific assumptions regarding the underlying data distribution, such as normality and homogeneity of variances. This is particularly useful since we have already rejected the assumption of equal variances, as well as normality.
+
+Our goal is to determine whether Grades depend on Degree or if the differences we observe might simply be due to random chance. The F-statistic quantifies the extent of variation between the groups (based on degree levels) relative to the variation within each group.
+
+```{r}
+observed_infer <-
+  grades_modified %>%
+  specify(Score ~ Degree) %>%
+  hypothesise(null = "independence") %>%
+  calculate(stat = "F")
+observed_infer
+```
+
+```{r}
+null_dist_infer <- grades_modified %>%
+  specify(Score ~ Degree) %>%
+  hypothesise(null = "independence") %>%
+  generate(reps = 4999, type = "permute") %>%
+  calculate(stat = "F")
+##
+null_dist_infer
+```
+
+```{r}
+null_dist_infer %>%
+  visualise(method = "simulation") +
+  shade_p_value(obs_stat = observed_infer$stat, direction = "right") +
+  scale_x_continuous(trans = "log10", expand = c(0, 0)) +
+  coord_cartesian(xlim = c(0.2, 500), clip = "off") +
+  annotation_logticks(outside = FALSE)
+```
+
+```{r}
+p_value <- null_dist_infer %>%
+  summarise(p_value = mean(stat >= observed_infer$stat))
+p_value
+```
+
+### Conclusion 
+
+A p-value of 0.019 suggests there is only a 1.9% chance of obtaining these results if Degree had no impact on Score. Given the low p-value, we can reject the null hypothesis that states there are no differences in the grades of students from various degree programs.

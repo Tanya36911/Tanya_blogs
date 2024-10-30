@@ -1,0 +1,115 @@
+---
+title: "A3: Pocket Money"
+author: "Tanya Michelle Justin"
+---
+
+## **Guys have more pocket money than Gals.**
+
+### What are we trying to find out?
+
+The aim of this experiment is to determine whether there is a significant difference in pocket money between males and females.
+
+### How was the data collected?
+
+The sample data for this study was collected from students at MAHE who were available at the time of data gathering. To minimize selection bias, participants were chosen through a coin toss, which determined whether each student would participate in the survey. This sample aims to represent the entire MAHE student population. This data was gathered from 60 individuals 30 males and 30 females . Each student was asked about the amount of money spent the day before.
+
+```{r}
+#| label: setup
+library(mosaic)
+library(crosstable)
+library(tidyverse)
+library(ggformula)
+
+```
+
+```{r}
+#| label: Reading the Data
+library(readr)
+pm <- read_csv("../../data/Pocket_Money.csv")
+pm
+glimpse(pm)
+inspect(pm)
+```
+
+### Data Dictionary:
+
+-   Qualitative Data:
+    -   Gender
+
+    -   Name (not really required)
+-   Quantitative Data:
+    -   Money
+
+*Target Variable* : Money
+
+*Predictor* *Variable* : Gender
+
+### Crosstables
+
+```{r}
+pm %>% 
+  crosstable(Money_spent ~ Gender) %>% 
+  as_flextable()
+```
+
+*Observations*:
+
+While the mean Money spent amounts for males and females individuals appear to differ, this visible difference alone is not enough to conclude that males get more pocket money that females .
+
+### Mutating data and making Plots
+
+```{r}
+pm %>% 
+  gf_histogram(~Money_spent| Gender, fill='blue', colour= 'black') %>% 
+ gf_labs(title = "Money spent faceted by Gender")
+```
+
+*Observations* :
+
+As shown in the graph, many people didn't spend money at all
+
+### Shapiro Test
+
+```{r}
+pm %>% filter(Gender == "Male") %>% select(Money_spent) -> Male
+pm %>% filter(Gender == "Female") %>% select(Money_spent) -> Female
+Male 
+Female
+
+shapiro.test(Male $ Money_spent)
+shapiro.test(Female$ Money_spent)
+
+```
+
+*Observations*:
+
+The data for both groups (Male and Female) are not normally distributed, as suggested by the very small p-values. So I will directly use the Permutation Test.
+
+### Permutation Test
+
+```{r}
+obs_diff_Gender<- diffmean(Money_spent~Gender,data=pm)
+obs_diff_Gender
+```
+
+```{r}
+null_dist_pm <- 
+  do(4999) * diffmean(data = pm, 
+                     Money_spent ~ shuffle(Gender))
+null_dist_pm
+###
+prop1(~ diffmean <= obs_diff_Gender, data = null_dist_pm)
+###
+gf_histogram(data = null_dist_pm, ~ diffmean, 
+             bins = 25) %>%
+  gf_vline(xintercept = obs_diff_Gender, 
+           colour = "red", linewidth = 1,
+           title = "Null Distribution by Permutation", 
+           subtitle = "Histogram") %>% 
+  gf_labs(x = "Difference in Means")
+###
+```
+
+### Conclusion:
+
+A proportion close to 0.5 indicates a lack of strong evidence to reject the null hypothesis, while values significantly higher or lower would suggest stronger evidence against it. In this case, a proportion of **0.5696** suggests that there is not enough evidence to definitively conclude that there is a significant difference in the money spent by males and females.
